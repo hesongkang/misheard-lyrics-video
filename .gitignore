@@ -1,0 +1,22 @@
+.DS_Store
+.env
+.env.*
+node_modules/
+*.log
+
+# Generated media must never enter the public Skill repository.
+*.mp3
+*.m4a
+*.wav
+*.aac
+*.flac
+*.mp4
+*.mov
+*.webm
+
+# Local and test outputs.
+.work/
+test-output/
+renders/
+coverage/
+

@@ -1,0 +1,5 @@
+interface:
+  display_name: "空耳沙雕 MV"
+  short_description: "把歌曲音频变成逐句确认、可恢复、可重做镜头的空耳竖屏短视频"
+  default_prompt: "Use $misheard-lyrics-video to turn this song audio into a confirmed 60–90 second misheard-lyrics MV."
+
