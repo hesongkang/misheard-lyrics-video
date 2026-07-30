@@ -81,7 +81,7 @@
 | HyperFrames CLI | v0.7.70 可用，`npx hyperframes ...` | 合成、渲染、transcribe 都靠它 |
 | ffmpeg | v8.1.2 可用 | 音频裁剪、抽帧、探针 |
 | Cola `gen_video` | 可用（Cola 宿主内置 agent 工具） | SeeDance 2.0 Pro（`doubao-seedance-2-pro`）。成本参考：5秒 1080p 9:16 ≈ 233 credits |
-| listenhub CLI | `/opt/homebrew/bin/listenhub`（`@marswave/listenhub-cli` 0.0.16）已登录 | 备用视频生成路径。注意：`api.listenhub.ai` 不可达时 CLI 自动切换 `api.listenhub.app`，切换后需重试一次命令 |
+| listenhub CLI | `/opt/homebrew/bin/listenhub`（`@marswave/listenhub-cli` 0.0.16）已配置 OpenAPI Key | 备用视频生成路径。OpenAPI 链路默认走 `api.marswave.ai/openapi`，不可达时切换 `api.listenhub.app/openapi`（或设 `LISTENHUB_OPENAPI_URL`），切换后需重试一次命令 |
 | Cola skills 目录 | `~/.cola/skills/` | Cola 宿主的 skill 安装位置；**安装后需重启 Cola 才生效**（技能列表在启动时扫描） |
 
 ### 4.1 HyperFrames 合成的关键契约（合成环节必读）
@@ -108,9 +108,9 @@ Skill 是 SKILL.md 驱动的（给 agent 看的指令文档，不是传统代码
 检测顺序：
 1. 宿主是 Cola（有 gen_video 工具可调）→ 用 gen_video
    参数：模型 doubao-seedance-2-pro，5秒，1080p，9:16，prompt 为该镜头的画面描述
-2. 否则 → 用 listenhub CLI：先 `listenhub auth status` 检查登录，
-   未登录则停下引导用户执行 `listenhub auth login`；
-   已登录则用其 video 生成命令（开工前先 `listenhub video --help` 确认参数格式）
+2. 否则 → 用 listenhub CLI：先 `listenhub openapi config show` 检查 API Key，
+   未配置则停下引导用户执行 `listenhub openapi config set-key`（或设置 LISTENHUB_API_KEY）；
+   已配置则用其 openapi video 生成命令（开工前先 `listenhub openapi video --help` 确认参数格式）
 ```
 
 每个镜头的生成 prompt 结构建议：`[主体+动作，直白表达空耳字面意思] + [场景] + [风格基调，可每镜不同] + [5秒内完成的单一动作]`。prompt 用中文或英文由实现时实测哪个出片效果好来定。

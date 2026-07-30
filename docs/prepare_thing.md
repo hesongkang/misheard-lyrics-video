@@ -16,15 +16,15 @@
 `scripts/listenhub-shot.mjs` 的实际调用链：
 
 ```
-listenhub auth status                         # 检查登录
-listenhub video create \
+listenhub openapi config show                         # 检查 API Key
+listenhub openapi video create \
   --model doubao-seedance-2-pro \             # SeeDance 2.0 Pro
   --resolution 1080p --ratio 9:16 \
   --duration <N> --no-generate-audio --json   # 提交生成
 # -> 轮询任务 -> 下载 mp4 到 shots/attempts/
 ```
 
-模型调用（SeeDance 2.0 Pro）封装在 listenhub CLI 内部，与 Claude Code 无关。所以"接入视频生成模型"= **安装并登录 listenhub CLI**。
+模型调用（SeeDance 2.0 Pro）封装在 listenhub CLI 内部，与 Claude Code 无关。所以"接入视频生成模型"= **安装 listenhub CLI 并配置 OpenAPI Key**。
 
 ## 准备清单
 
@@ -34,17 +34,17 @@ listenhub video create \
 # 安装（npm 全局包）
 npm install -g @marswave/listenhub-cli
 
-# 登录（交互式，需你自己执行）
-listenhub auth login
+# 配置 API Key（交互式；或 export LISTENHUB_API_KEY="lh_sk_..."）
+listenhub openapi config set-key
 
-# 验证登录态
-listenhub auth status
+# 验证 API Key 已配置
+listenhub openapi config show
 
 # 验证视频生成路径可用（应输出含 doubao-seedance-2-pro 的帮助）
-listenhub video create --help
+listenhub openapi video create --help
 ```
 
-> 注意：`api.listenhub.ai` 不可达时 CLI 会自动切换到 `api.listenhub.app`，切换后需重试一次命令。
+> 注意：`api.marswave.ai/openapi` 不可达时切换 `api.listenhub.app/openapi`（或设 `LISTENHUB_OPENAPI_URL`），切换后需重试一次命令。
 
 ### 2. HyperFrames CLI（合成 / 渲染 / ASR，必装）
 
@@ -181,5 +181,5 @@ SKIP_HYPERFRAMES_CHECK=1 bash tests/run-all.sh
 
 - **统一用 `host=codex`**：所有依赖检查、视频生成都走 listenhub 路径，不要试图在 Claude Code 里模拟 Cola 的 `gen_video`。
 - **两道批准门照常生效**：候选门（用户逐句确认空耳前绝不生成视频）和渲染门（最终预览确认前绝不渲染）由 `assert-generation-ready.mjs` 的内容摘要从代码层面强制，与宿主无关。
-- **首次真实跑通需付费**：`tests/run-all.sh` 用 ffmpeg 合成的色块视频，不花钱；只有用真实歌曲走到 `listenhub video create` 才消耗 credits（参考：5 秒 1080p 9:16 ≈ 233 credits）。首次端到端验收须由你提供音频，并在候选表逐句确认后单独执行。
+- **首次真实跑通需付费**：`tests/run-all.sh` 用 ffmpeg 合成的色块视频，不花钱；只有用真实歌曲走到 `listenhub openapi video create` 才消耗 credits（参考：5 秒 1080p 9:16 ≈ 233 credits）。首次端到端验收须由你提供音频，并在候选表逐句确认后单独执行。
 - **音频来源**：只接受用户自备的本地 mp3/m4a/wav，不做下载、不做 AI 翻唱，版权风险自担。

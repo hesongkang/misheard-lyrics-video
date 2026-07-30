@@ -49,7 +49,7 @@ work_dir="$(mktemp -d /tmp/misheard-lyrics-video.XXXXXX)" && git clone https://g
 - FFmpeg 与 ffprobe
 - HyperFrames CLI，含 `transcribe`、`check`、`preview`、`render`
 - Cola 路径：宿主内置 `gen_video`
-- 非 Cola 路径：已登录的 ListenHub CLI
+- 非 Cola 路径：已配置 API Key 的 ListenHub CLI
 
 检查当前环境：
 

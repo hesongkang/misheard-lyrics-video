@@ -36,7 +36,7 @@ Read this Skill's references only when their stage applies:
 
 Treat both gates as mandatory:
 
-1. **Candidate gate:** do not call `gen_video`, `listenhub video`, or any other paid video generator
+1. **Candidate gate:** do not call `gen_video`, `listenhub openapi video`, or any other paid video generator
    until the user explicitly selects or edits every line. Silence, an earlier general request to
    make a video, autonomous mode, and an estimated budget are not approval.
 2. **Render gate:** after `hyperframes check` passes, open the final Studio preview and ask whether
@@ -53,7 +53,7 @@ automatic review retries: record their minimal Prompt repair with `set-retry-pro
 Resolve this Skill's directory, then choose the host:
 
 - If the Cola-native `gen_video` tool is available, use host `cola`.
-- Otherwise use host `codex` and the ListenHub CLI path.
+- Otherwise use host `codex` and the ListenHub CLI path (via OpenAPI Key).
 
 Run the dependency check before other work:
 

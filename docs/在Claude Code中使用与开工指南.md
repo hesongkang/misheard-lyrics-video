@@ -46,19 +46,19 @@ rsync -a --delete \
   ~/.claude/skills/misheard-lyrics-video/
 ```
 
-### 3. listenhub 已登录（唯一硬阻塞）
+### 3. listenhub API Key 已配置（唯一硬阻塞）
 
 ```bash
-listenhub auth status     # 应显示已登录
+listenhub openapi config show     # 应显示已配置
 ```
 
-若 `Not logged in`，在 Claude Code 输入框输入（`!` 前缀让命令在当前会话执行）：
+若提示未配置，在 Claude Code 输入框输入（`!` 前缀让命令在当前会话执行）：
 
 ```
-! listenhub auth login
+! listenhub openapi config set-key
 ```
 
-这是交互式浏览器 OAuth，必须你本人完成。登录一次后，后续 agent 调用 `listenhub-shot.mjs` 都会自动带认证。
+API Key 可在 ListenHub 控制台获取后在此配置，无需浏览器登录。配置一次后，后续 agent 调用 `listenhub-shot.mjs` 都会自动带认证。
 
 ### 4. 重启 Claude Code 会话
 
@@ -244,7 +244,7 @@ node <skill-dir>/scripts/project-status.mjs --project <project-dir>
 ## 七、注意事项
 
 - **音频来源**：只接受你自备的本地 mp3/m4a/wav。不下载、不搜索、不做 AI 翻唱，版权风险自担。
-- **首次端到端需付费**：`tests/run-all.sh` 用 ffmpeg 合成色块视频跑全流程、不花钱；只有走到第 5 步 `listenhub video create` 才消耗 credits。首次验收须由你提供音频、在候选表逐句确认后单独执行。
+- **首次端到端需付费**：`tests/run-all.sh` 用 ffmpeg 合成色块视频跑全流程、不花钱；只有走到第 5 步 `listenhub openapi video create` 才消耗 credits。首次验收须由你提供音频、在候选表逐句确认后单独执行。
 - **成片规格写死**：1080×1920、30fps、原曲为唯一音轨、镜头静音硬切、底部空耳大字字幕。不可配置（不做横屏/方形、不做双行字幕、不做画风统一、不做自动发布）。
 - **禁区**：不生成低俗、涉政、真人明星丑化/欺骗性的空耳。
 - **跑测试确认环境**（不消耗 credits，须在**仓库源目录**跑--`tests/` 在安装 skill 时被排除，skill 安装目录里没有）：
@@ -261,7 +261,7 @@ node <skill-dir>/scripts/project-status.mjs --project <project-dir>
 | 你要做 | 什么时候 |
 |---|---|
 | 提供本地音频路径 | 开工时 |
-| `! listenhub auth login` | 开工前（仅一次） |
+| `! listenhub openapi config set-key` | 开工前（仅一次） |
 | 逐句选空耳 `1A 2B 3自定义：…` | 第 3 步（候选门） |
 | 预览后答「渲染」或「改」 | 第 7 步（渲染门） |
 | 说「重做第 N 镜」 | 交付后想改某一镜 |
@@ -283,6 +283,6 @@ node <skill-dir>/scripts/project-status.mjs --project <project-dir>
 
 T4 用 `npx hyperframes@0.7.83 check` 跑通了合成项目的静态校验，证明 HyperFrames CLI + Chrome 渲染链路在本机正常，`integration.mjs` 生成的合成 HTML 完全合规。
 
-**结论**：脚本逻辑、状态机、摘要门、合成、渲染链路全部就绪。配合 `check-deps.sh`（除 listenhub 登录外全 OK）与 `hyperframes doctor`（whisper-cpp / Chrome 均 ok），环境已可开工，唯一待办仍是 `! listenhub auth login`。
+**结论**：脚本逻辑、状态机、摘要门、合成、渲染链路全部就绪。配合 `check-deps.sh`（除 listenhub 登录外全 OK）与 `hyperframes doctor`（whisper-cpp / Chrome 均 ok），环境已可开工，唯一待办仍是 `! listenhub openapi config set-key`。
 
 > T1 出现 `rg: command not found`（ripgrep 未装），但 T1 仍 PASS--脚本有 grep fallback，rg 非必需。想消掉提示可 `sudo apt install ripgrep`，不装不影响。

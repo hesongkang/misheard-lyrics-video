@@ -94,14 +94,14 @@ if command -v npx >/dev/null 2>&1; then
 fi
 
 if [ "$host" = "codex" ]; then
-  need_command listenhub "Install @marswave/listenhub-cli and run listenhub auth login."
+  need_command listenhub "Install @marswave/listenhub-cli and run listenhub openapi config set-key."
   if command -v listenhub >/dev/null 2>&1; then
-    if listenhub auth status >/dev/null 2>&1; then
-      ok "ListenHub authentication is active"
+    if listenhub openapi config show >/dev/null 2>&1; then
+      ok "ListenHub API Key is configured"
     else
-      fail "ListenHub is not logged in. Run: listenhub auth login"
+      fail "ListenHub API Key is not configured. Run: listenhub openapi config set-key (or set LISTENHUB_API_KEY)"
     fi
-    if listenhub video create --help 2>&1 | grep -q "doubao-seedance-2-pro"; then
+    if listenhub openapi video create --help 2>&1 | grep -q "doubao-seedance-2-pro"; then
       ok "ListenHub SeeDance 2.0 Pro path is available"
     else
       fail "ListenHub video create does not expose doubao-seedance-2-pro; upgrade the CLI."

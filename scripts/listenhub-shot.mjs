@@ -99,12 +99,13 @@ try {
     throw new Error(`Attempt file already exists: ${outputPath}. Refuse a duplicate paid call.`);
   }
 
-  const auth = runListenHub(["auth", "status"], 30_000);
+  const auth = runListenHub(["openapi", "config", "show"], 30_000);
   if (auth.status !== 0) {
-    throw new Error("ListenHub is not authenticated. Run `listenhub auth login`, then retry.");
+    throw new Error("ListenHub API Key is not configured. Run `listenhub openapi config set-key` (or set LISTENHUB_API_KEY), then retry.");
   }
 
   const createArgs = [
+    "openapi",
     "video",
     "create",
     "--prompt",
@@ -128,12 +129,12 @@ try {
   if (generation.status !== 0) {
     const existingTaskId = taskIdFromText(combined);
     if (existingTaskId) {
-      const recovered = runListenHub(["video", "get", existingTaskId, "--json"], 60_000);
+      const recovered = runListenHub(["openapi", "video", "get", existingTaskId, "--json"], 60_000);
       if (recovered.status === 0) generation = recovered;
       else {
         throw new Error(`Generation task ${existingTaskId} was submitted but could not be recovered. Do not resubmit automatically.`);
       }
-    } else if (/api\.listenhub\.ai|ENOTFOUND|ECONN|fetch failed|network/i.test(combined)) {
+    } else if (/api\.(listenhub\.ai|marswave\.ai|listenhub\.app)|ENOTFOUND|ECONN|fetch failed|network/i.test(combined)) {
       generation = runListenHub(createArgs, (timeoutSeconds + 30) * 1000);
     }
   }

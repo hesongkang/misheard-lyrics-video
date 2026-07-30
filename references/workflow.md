@@ -11,7 +11,7 @@
 bash <skill-dir>/scripts/check-deps.sh --host <cola|codex>
 ```
 
-依赖失败时先修复。ListenHub 未登录时停止并让用户执行 `listenhub auth login`，不要尝试
+依赖失败时先修复。ListenHub API Key 未配置时停止并让用户执行 `listenhub openapi config set-key`，不要尝试
 绕过认证或切换到未约定的视频模型。
 
 ## 1. 初始化
