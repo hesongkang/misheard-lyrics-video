@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `SKILL.md` — agent 宿主（Cola 或 Codex）读取的主指令文档，定义 8 步空耳 MV 生成工作流。
 - `scripts/` — 把工作流中"能确定化的步骤"做成零依赖的 Node ESM（`.mjs`）和 bash 脚本。
 
-双宿主：Cola 用内置 `gen_video` 工具生成视频（host=cola）；非 Cola 用 `listenhub` CLI（host=codex）。模型固定 `doubao-seedance-2-pro`。成片规格写死：1080×1920、30fps、原曲为唯一音轨、镜头静音硬切、底部空耳大字字幕。
+三宿主：Cola 用内置 `gen_video` 工具生成视频（host=cola）；Codex 与 Claude Code 用 `listenhub` CLI（host=codex/claude，二者代码路径相同，都走 `listenhub openapi`，仅安装目录与 companion skill 目录不同）。模型固定 `doubao-seedance-2-pro`。成片规格写死：1080×1920、30fps、原曲为唯一音轨、镜头静音硬切、底部空耳大字字幕。
 
 仓库本身**没有 `package.json`、没有构建步骤、没有运行时依赖**——脚本只用 Node 22+ 标准库 + `ffmpeg`/`ffprobe` + HyperFrames CLI（+ 可选 `listenhub`）。`node_modules` 不应存在。
 
@@ -33,6 +33,7 @@ node tests/integration.mjs --output <dir>     # 用 ffmpeg 合成色块视频跑
 # 安装到宿主技能目录（rsync 同步，排除 tests/README/REQUIREMENTS/install 脚本）
 ./install.sh --cola        # ~/.cola/skills/misheard-lyrics-video（装完需重启 Cola）
 ./install.sh --codex       # ~/.codex/skills/misheard-lyrics-video
+./install.sh --claude      # ~/.claude/skills/misheard-lyrics-video（装完需重启 Claude Code 会话）
 ./install.sh --all
 ```
 

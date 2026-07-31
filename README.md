@@ -28,12 +28,13 @@ work_dir="$(mktemp -d /tmp/misheard-lyrics-video.XXXXXX)" && git clone https://g
 
 安装完成后必须重启 Cola，技能列表才会重新扫描。
 
-### Codex 或双宿主
+### Codex / Claude Code / 多宿主
 
 ```bash
-./install.sh --codex  # ~/.codex/skills/misheard-lyrics-video
-./install.sh --cola   # ~/.cola/skills/misheard-lyrics-video
-./install.sh --all    # 两边都装
+./install.sh --codex   # ~/.codex/skills/misheard-lyrics-video
+./install.sh --claude  # ~/.claude/skills/misheard-lyrics-video（Claude Code，装完需重启会话）
+./install.sh --cola    # ~/.cola/skills/misheard-lyrics-video
+./install.sh --all     # 三边都装
 ```
 
 卸载：
@@ -56,6 +57,7 @@ work_dir="$(mktemp -d /tmp/misheard-lyrics-video.XXXXXX)" && git clone https://g
 ```bash
 bash scripts/check-deps.sh --host cola
 bash scripts/check-deps.sh --host codex
+bash scripts/check-deps.sh --host claude
 ```
 
 ## 使用

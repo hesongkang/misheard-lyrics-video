@@ -7,15 +7,17 @@ mode="${1:---all}"
 case "$mode" in
   --cola) mode="cola" ;;
   --codex) mode="codex" ;;
+  --claude) mode="claude" ;;
   --all) mode="all" ;;
   *)
-    echo "Usage: ./uninstall.sh [--cola|--codex|--all]" >&2
+    echo "Usage: ./uninstall.sh [--cola|--codex|--claude|--all]" >&2
     exit 2
     ;;
 esac
 
 cola_target="${COLA_DATA_DIR:-$HOME/.cola}/skills/$skill_name"
 codex_target="${CODEX_HOME:-$HOME/.codex}/skills/$skill_name"
+claude_target="${CLAUDE_DATA_DIR:-$HOME/.claude}/skills/$skill_name"
 
 remove_skill() {
   target="$1"
@@ -38,9 +40,10 @@ remove_skill() {
 case "$mode" in
   cola) remove_skill "$cola_target" "Cola" ;;
   codex) remove_skill "$codex_target" "Codex" ;;
+  claude) remove_skill "$claude_target" "Claude Code" ;;
   all)
     remove_skill "$cola_target" "Cola"
     remove_skill "$codex_target" "Codex"
+    remove_skill "$claude_target" "Claude Code"
     ;;
 esac
-

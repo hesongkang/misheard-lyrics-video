@@ -7,7 +7,7 @@ soft=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --host)
-      [ "$#" -ge 2 ] || { echo "ERROR: --host needs cola or codex" >&2; exit 2; }
+      [ "$#" -ge 2 ] || { echo "ERROR: --host needs cola, codex, or claude" >&2; exit 2; }
       host="$2"
       shift 2
       ;;
@@ -26,9 +26,9 @@ if [ "$host" = "auto" ]; then
   host="${MISHEARD_HOST:-codex}"
 fi
 case "$host" in
-  cola|codex) ;;
+  cola|codex|claude) ;;
   *)
-    echo "ERROR: --host must be cola or codex" >&2
+    echo "ERROR: --host must be cola, codex, or claude" >&2
     exit 2
     ;;
 esac
@@ -93,7 +93,8 @@ if command -v npx >/dev/null 2>&1; then
   fi
 fi
 
-if [ "$host" = "codex" ]; then
+# codex 与 claude 都走 listenhub CLI 路径；仅 cola 用内置 gen_video 工具。
+if [ "$host" != "cola" ]; then
   need_command listenhub "Install @marswave/listenhub-cli and run listenhub openapi config set-key."
   if command -v listenhub >/dev/null 2>&1; then
     if listenhub openapi config show >/dev/null 2>&1; then
@@ -112,9 +113,10 @@ else
 fi
 
 skill_home="${COLA_DATA_DIR:-$HOME/.cola}/skills"
-if [ "$host" = "codex" ]; then
-  skill_home="${CODEX_HOME:-$HOME/.codex}/skills"
-fi
+case "$host" in
+  codex) skill_home="${CODEX_HOME:-$HOME/.codex}/skills" ;;
+  claude) skill_home="${CLAUDE_DATA_DIR:-$HOME/.claude}/skills" ;;
+esac
 for companion in hyperframes hyperframes-core hyperframes-cli media-use; do
   if [ ! -f "$skill_home/$companion/SKILL.md" ]; then
     warn "Companion Skill '$companion' is not installed under $skill_home; CLI execution still works, but contract guidance may be unavailable."
